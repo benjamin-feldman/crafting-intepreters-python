@@ -1,0 +1,6 @@
+{
+    "python.analysis.typeCheckingMode": "strict",  // or "basic" or "off"
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.useLibraryCodeForTypes": true
+  }
+  
