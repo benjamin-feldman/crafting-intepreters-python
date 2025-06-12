@@ -19,7 +19,7 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
 
         f.write('R = TypeVar("R")\n\n\n')
 
-        f.write(f"class Visitor(ABC, Generic[R]):\n")
+        f.write(f"class Visitor[R](ABC):\n")
         for t in types:
             class_name = t.split("=")[0].strip()
             f.write(
