@@ -11,6 +11,7 @@ from src.token import Token, TokenType
 from src.parser import Parser
 from src.ast_printer import AstPrinter
 
+
 class Lox:
     had_error: bool = False
 
@@ -30,10 +31,10 @@ class Lox:
         tokens = scanner.scan_tokens()
         parser = Parser(tokens)
         expr = parser.parse()
-        
+
         if self.had_error or (not expr):
             return
-        
+
         print(AstPrinter().print(expr))
 
     def _run_file(self, filepath: str):
@@ -56,7 +57,7 @@ class Lox:
     @classmethod
     def error(cls, line: int, message: str):
         cls._report(line, "", message)
-        
+
     @classmethod
     def token_error(cls, token: Token, message: str):
         if token.type == TokenType.EOF:

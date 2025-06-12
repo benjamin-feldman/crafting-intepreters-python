@@ -1,8 +1,8 @@
 from src.token import Token, TokenType
 from src.expr import Expr, Binary, Unary, Grouping, Literal
 
-class ParseError(Exception):
-    ...
+
+class ParseError(Exception): ...
 
 
 class Parser:
@@ -22,13 +22,12 @@ class Parser:
     def __init__(self, tokens: list[Token]):
         self._tokens = tokens
         self._current = 0
-        
+
     def parse(self) -> Expr | None:
         try:
             return self._expression()
         except ParseError:
             return None
-        
 
     def _expression(self) -> Expr:
         return self._equality()
@@ -99,14 +98,13 @@ class Parser:
         if self._match(TokenType.NUMBER, TokenType.STRING):
             literal = self._previous().literal
             return Literal(literal)
-        
+
         if self._match(TokenType.LEFT_PAREN):
             expr = self._expression()
             self._consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return Grouping(expr)
-        
+
         raise self._error(self._peek(), "Expect expression.")
-        
 
     def _match(self, *types: TokenType) -> bool:
         for token_type in types:
@@ -114,11 +112,11 @@ class Parser:
                 self._advance()
                 return True
         return False
-    
+
     def _consume(self, token_type: TokenType, message: str) -> Token:
         if self._check(token_type):
             return self._advance()
-        
+
         raise self._error(self._peek(), message)
 
     def _check(self, token_type: TokenType) -> bool:
@@ -140,21 +138,21 @@ class Parser:
     @property
     def _is_at_end(self) -> bool:
         return self._peek().type == TokenType.EOF
-    
+
     def _error(self, token: Token, message: str) -> ParseError:
         from src.lox import Lox
-        
+
         Lox.token_error(token, message)
-        
+
         return ParseError()
-    
+
     def _synchronize(self) -> None:
         self._advance()
-        
+
         while not self._is_at_end:
             if self._previous().type == TokenType.SEMICOLON:
                 return
-            
+
             match self._peek().type:
                 case TokenType.CLASS:
                     pass
@@ -174,4 +172,3 @@ class Parser:
                     return
                 case _:
                     pass
-        

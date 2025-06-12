@@ -11,57 +11,55 @@ R = TypeVar("R")
 
 
 class Visitor[R](ABC):
-	@abstractmethod
-	def visit_binary_expr(self, expr: "Binary") -> R: ...
-	@abstractmethod
-	def visit_grouping_expr(self, expr: "Grouping") -> R: ...
-	@abstractmethod
-	def visit_literal_expr(self, expr: "Literal") -> R: ...
-	@abstractmethod
-	def visit_unary_expr(self, expr: "Unary") -> R: ...
+    @abstractmethod
+    def visit_binary_expr(self, expr: "Binary") -> R: ...
+    @abstractmethod
+    def visit_grouping_expr(self, expr: "Grouping") -> R: ...
+    @abstractmethod
+    def visit_literal_expr(self, expr: "Literal") -> R: ...
+    @abstractmethod
+    def visit_unary_expr(self, expr: "Unary") -> R: ...
 
 
 class Expr(ABC):
-	@abstractmethod
-	def accept(self, visitor: Visitor[R]) -> R: ...
+    @abstractmethod
+    def accept(self, visitor: Visitor[R]) -> R: ...
 
 
 class Binary(Expr):
-	def __init__(self, left: Expr, operator: Token, right: Expr):
-		self.left = left
-		self.operator = operator
-		self.right = right
-	
-	@override
-	def accept(self, visitor: Visitor[R]) -> R:
-		return visitor.visit_binary_expr(self)
+    def __init__(self, left: Expr, operator: Token, right: Expr):
+        self.left = left
+        self.operator = operator
+        self.right = right
+
+    @override
+    def accept(self, visitor: Visitor[R]) -> R:
+        return visitor.visit_binary_expr(self)
 
 
 class Grouping(Expr):
-	def __init__(self, expression: Expr):
-		self.expression = expression
-	
-	@override
-	def accept(self, visitor: Visitor[R]) -> R:
-		return visitor.visit_grouping_expr(self)
+    def __init__(self, expression: Expr):
+        self.expression = expression
+
+    @override
+    def accept(self, visitor: Visitor[R]) -> R:
+        return visitor.visit_grouping_expr(self)
 
 
 class Literal(Expr):
-	def __init__(self, value: object):
-		self.value = value
-	
-	@override
-	def accept(self, visitor: Visitor[R]) -> R:
-		return visitor.visit_literal_expr(self)
+    def __init__(self, value: object):
+        self.value = value
+
+    @override
+    def accept(self, visitor: Visitor[R]) -> R:
+        return visitor.visit_literal_expr(self)
 
 
 class Unary(Expr):
-	def __init__(self, operator: Token, right: Expr):
-		self.operator = operator
-		self.right = right
-	
-	@override
-	def accept(self, visitor: Visitor[R]) -> R:
-		return visitor.visit_unary_expr(self)
+    def __init__(self, operator: Token, right: Expr):
+        self.operator = operator
+        self.right = right
 
-
+    @override
+    def accept(self, visitor: Visitor[R]) -> R:
+        return visitor.visit_unary_expr(self)
