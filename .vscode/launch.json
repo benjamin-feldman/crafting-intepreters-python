@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Python: Lox with Script",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/lox.py",
+            "args": ["${workspaceFolder}/debug.lox"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Lox REPL",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/lox.py",
+            "args": [],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+} 
