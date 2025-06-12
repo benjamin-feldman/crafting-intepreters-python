@@ -9,11 +9,13 @@ if project_root not in sys.path:
 from src.scanner import Scanner
 from src.token import Token, TokenType
 from src.parser import Parser
-from src.ast_printer import AstPrinter
+from src.interpreter import Interpreter, LoxRuntimeError
 
 
 class Lox:
     had_error: bool = False
+    had_runtime_error: bool = False
+    interpreter = Interpreter()
 
     def main(self):
         parser = argparse.ArgumentParser(description="Usage: plox [script]")
@@ -35,7 +37,7 @@ class Lox:
         if self.had_error or (not expr):
             return
 
-        print(AstPrinter().print(expr))
+        self.interpreter.interpret(expr)
 
     def _run_file(self, filepath: str):
         with open(filepath, mode="r", encoding="utf-8") as source:
@@ -43,6 +45,8 @@ class Lox:
 
         if self.had_error:
             sys.exit(65)
+        if self.had_runtime_error:
+            sys.exit(70)
 
     def _run_prompt(self):
         while True:
@@ -64,6 +68,11 @@ class Lox:
             cls._report(token.line, " at end", message)
         else:
             cls._report(token.line, " at '" + token.lexeme + "'", message)
+    
+    @classmethod
+    def runtime_error(cls, error: LoxRuntimeError) -> None:
+        print(f"{str(error)}\n[line {error.token.line}]")
+        cls.had_runtime_error = True
 
     @classmethod
     def _report(cls, line: int, where: str, message: str):
