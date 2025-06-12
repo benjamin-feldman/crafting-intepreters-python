@@ -3,7 +3,7 @@
 #####################################
 
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, override
+from typing import TypeVar, override
 from src import *
 
 
@@ -11,9 +11,13 @@ R = TypeVar("R")
 
 
 class Visitor[R](ABC):
+	@abstractmethod
 	def visit_binary_expr(self, expr: "Binary") -> R: ...
+	@abstractmethod
 	def visit_grouping_expr(self, expr: "Grouping") -> R: ...
+	@abstractmethod
 	def visit_literal_expr(self, expr: "Literal") -> R: ...
+	@abstractmethod
 	def visit_unary_expr(self, expr: "Unary") -> R: ...
 
 
