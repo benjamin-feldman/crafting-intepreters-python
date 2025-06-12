@@ -7,7 +7,9 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from src.scanner import Scanner
-
+from src.token import Token, TokenType
+from src.parser import Parser
+from src.ast_printer import AstPrinter
 
 class Lox:
     had_error: bool = False
@@ -23,13 +25,16 @@ class Lox:
         else:
             self._run_prompt()
 
-    @staticmethod
-    def _run(source: str):
+    def _run(self, source: str):
         scanner = Scanner(source)
         tokens = scanner.scan_tokens()
-
-        for token in tokens:
-            print(token)
+        parser = Parser(tokens)
+        expr = parser.parse()
+        
+        if self.had_error or (not expr):
+            return
+        
+        print(AstPrinter().print(expr))
 
     def _run_file(self, filepath: str):
         with open(filepath, mode="r", encoding="utf-8") as source:
@@ -51,6 +56,13 @@ class Lox:
     @classmethod
     def error(cls, line: int, message: str):
         cls._report(line, "", message)
+        
+    @classmethod
+    def token_error(cls, token: Token, message: str):
+        if token.type == TokenType.EOF:
+            cls._report(token.line, " at end", message)
+        else:
+            cls._report(token.line, " at '" + token.lexeme + "'", message)
 
     @classmethod
     def _report(cls, line: int, where: str, message: str):
