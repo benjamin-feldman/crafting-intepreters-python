@@ -19,8 +19,8 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
         f.write('R = TypeVar("R")\n\n\n')
 
         f.write(f"class Visitor[R](ABC):\n")
-        for t in types:
-            class_name = t.split("=")[0].strip()
+        for token_type in types:
+            class_name = token_type.split("=")[0].strip()
             f.write("\t@abstractmethod\n")
             f.write(
                 f'\tdef visit_{class_name.lower()}_{base_class_name.lower()}(self, {base_class_name.lower()}: "{class_name}") -> R: ...\n'
@@ -31,9 +31,9 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
         f.write(f"\tdef accept(self, visitor: Visitor[R]) -> R: ...\n")
         f.write(f"\n\n")
 
-        for t in types:
-            class_name = t.split("=")[0].strip()
-            fields = t.split("=")[1].strip()
+        for token_type in types:
+            class_name = token_type.split("=")[0].strip()
+            fields = token_type.split("=")[1].strip()
             f.write(f"class {class_name}({base_class_name}):\n")
             f.write(f"\tdef __init__(self, {fields}):\n")
             field_list = fields.split(",")
