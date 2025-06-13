@@ -1,9 +1,9 @@
 from typing import override
-from expr import Visitor, Expr
+from expr import ExprVisitor, Expr
 from src.expr import Binary, Grouping, Literal, Unary
 
 
-class AstPrinter(Visitor[str]):
+class AstPrinter(ExprVisitor[str]):
     def print(self, expr: Expr):
         return expr.accept(self)
 

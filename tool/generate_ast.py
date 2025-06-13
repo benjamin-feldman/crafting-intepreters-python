@@ -18,7 +18,9 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
 
         f.write('R = TypeVar("R")\n\n\n')
 
-        f.write(f"class Visitor[R](ABC):\n")
+        visitor_class_name = f"{base_class_name}Visitor"
+
+        f.write(f"class {visitor_class_name}[R](ABC):\n")
         for token_type in types:
             class_name = token_type.split("=")[0].strip()
             f.write("\t@abstractmethod\n")
@@ -28,7 +30,7 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
         f.write("\n\n")
         f.write(f"class {base_class_name}(ABC):\n")
         f.write(f"\t@abstractmethod\n")
-        f.write(f"\tdef accept(self, visitor: Visitor[R]) -> R: ...\n")
+        f.write(f"\tdef accept(self, visitor: {visitor_class_name}[R]) -> R: ...\n")
         f.write(f"\n\n")
 
         for token_type in types:
@@ -42,7 +44,7 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
                 f.write(f"\t\tself.{field_name} = {field_name}\n")
             f.write(f"\t\n")
             f.write(f"\t@override\n")
-            f.write(f"\tdef accept(self, visitor: Visitor[R]) -> R:\n")
+            f.write(f"\tdef accept(self, visitor: {visitor_class_name}[R]) -> R:\n")
             f.write(
                 f"\t\treturn visitor.visit_{class_name.lower()}_{base_class_name.lower()}(self)\n"
             )
@@ -50,10 +52,14 @@ def define_ast(output_dir: str, base_name: str, base_class_name: str, types: lis
 
 
 if __name__ == "__main__":
-    types = [
-        "Binary   = left: Expr, operator: Token, right: Expr",
-        "Grouping = expression: Expr",
-        "Literal  = value: object",
-        "Unary    = operator: Token, right: Expr",
-    ]
-    define_ast("src", "expr", "Expr", types)
+    define_ast(
+        "src",
+        "expr",
+        "Expr",
+        [
+            "Binary   = left: Expr, operator: Token, right: Expr",
+            "Grouping = expression: Expr",
+            "Literal  = value: object",
+            "Unary    = operator: Token, right: Expr",
+        ],
+    )

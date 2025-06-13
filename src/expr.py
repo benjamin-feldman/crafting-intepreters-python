@@ -10,7 +10,7 @@ from src import *
 R = TypeVar("R")
 
 
-class Visitor[R](ABC):
+class ExprVisitor[R](ABC):
     @abstractmethod
     def visit_binary_expr(self, expr: "Binary") -> R: ...
     @abstractmethod
@@ -23,7 +23,7 @@ class Visitor[R](ABC):
 
 class Expr(ABC):
     @abstractmethod
-    def accept(self, visitor: Visitor[R]) -> R: ...
+    def accept(self, visitor: ExprVisitor[R]) -> R: ...
 
 
 class Binary(Expr):
@@ -33,7 +33,7 @@ class Binary(Expr):
         self.right = right
 
     @override
-    def accept(self, visitor: Visitor[R]) -> R:
+    def accept(self, visitor: ExprVisitor[R]) -> R:
         return visitor.visit_binary_expr(self)
 
 
@@ -42,7 +42,7 @@ class Grouping(Expr):
         self.expression = expression
 
     @override
-    def accept(self, visitor: Visitor[R]) -> R:
+    def accept(self, visitor: ExprVisitor[R]) -> R:
         return visitor.visit_grouping_expr(self)
 
 
@@ -51,7 +51,7 @@ class Literal(Expr):
         self.value = value
 
     @override
-    def accept(self, visitor: Visitor[R]) -> R:
+    def accept(self, visitor: ExprVisitor[R]) -> R:
         return visitor.visit_literal_expr(self)
 
 
@@ -61,5 +61,5 @@ class Unary(Expr):
         self.right = right
 
     @override
-    def accept(self, visitor: Visitor[R]) -> R:
+    def accept(self, visitor: ExprVisitor[R]) -> R:
         return visitor.visit_unary_expr(self)
