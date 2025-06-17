@@ -26,18 +26,18 @@ class Lox:
         if script_filepath:
             self._run_file(script_filepath)
         else:
-            self._run_prompt()
+            self._run_prompt() 
 
     def _run(self, source: str):
         scanner = Scanner(source)
         tokens = scanner.scan_tokens()
         parser = Parser(tokens)
-        expr = parser.parse()
+        statements = parser.parse()
 
-        if self.had_error or (not expr):
+        if self.had_error or (not statements):
             return
 
-        self.interpreter.interpret(expr)
+        self.interpreter.interpret(statements)
 
     def _run_file(self, filepath: str):
         with open(filepath, mode="r", encoding="utf-8") as source:

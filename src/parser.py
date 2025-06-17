@@ -1,5 +1,6 @@
 from src.token import Token, TokenType
 from src.expr import Expr, Binary, Unary, Grouping, Literal
+from src.stmt import Stmt, PrintStmt, ExpressionStmt
 
 
 class ParseError(Exception): ...
@@ -8,6 +9,11 @@ class ParseError(Exception): ...
 class Parser:
     """
     Implements the Lox grammar:
+    program        → statement* EOF ;
+    statement      → exprStmt
+                   | printStmt ;
+    exprStmt       → expression ";" ;
+    printStmt      → "print" expression ";" ;
     expression     → equality ;
     equality       → comparison ( ( "!=" | "==" ) comparison )* ;
     comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
@@ -23,11 +29,26 @@ class Parser:
         self._tokens = tokens
         self._current = 0
 
-    def parse(self) -> Expr | None:
-        try:
-            return self._expression()
-        except ParseError:
-            return None
+    def parse(self) -> list[Stmt]:
+        statements: list[Stmt] = []
+        while not self._is_at_end:
+            statements.append(self._statement())
+        return statements
+
+    def _statement(self) -> Stmt:
+        if self._match(TokenType.PRINT):
+            return self._print_statement()
+        return self._expression_statement()
+    
+    def _print_statement(self) -> PrintStmt:
+        value = self._expression()
+        self._consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        return PrintStmt(value)
+    
+    def _expression_statement(self) -> ExpressionStmt:
+        value = self._expression()
+        self._consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        return ExpressionStmt(value)
 
     def _expression(self) -> Expr:
         return self._equality()

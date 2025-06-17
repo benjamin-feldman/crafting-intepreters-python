@@ -2,6 +2,7 @@ from typing import override
 
 from src.expr import Binary, Grouping, Literal, Expr, Unary, ExprVisitor
 from src.token import Token, TokenType
+from src.stmt import StmtVisitor, Stmt, PrintStmt, ExpressionStmt
 
 
 class LoxRuntimeError(Exception):
@@ -10,11 +11,11 @@ class LoxRuntimeError(Exception):
         self.token = token
 
 
-class Interpreter(ExprVisitor[object]):
-    def interpret(self, expr: Expr) -> None:
+class Interpreter(ExprVisitor[object], StmtVisitor[None]):
+    def interpret(self, statements: list[Stmt]) -> None:
         try:
-            value = self._evaluate(expr)
-            print(self._stringify(value))
+            for statement in statements:
+                self._execute(statement)
         except LoxRuntimeError as e:
             from src.lox import Lox
 
@@ -78,6 +79,20 @@ class Interpreter(ExprVisitor[object]):
                 return not self._is_equal(left, right)  # type: ignore
             case _:
                 return None
+    
+    @override
+    def visit_printstmt_stmt(self, stmt: PrintStmt) -> None:
+        value = self._evaluate(stmt.expression)
+        print(self._stringify(value))
+        return None
+    
+    @override
+    def visit_expressionstmt_stmt(self, stmt: ExpressionStmt) -> None:
+        self._evaluate(stmt.expression)
+        return None
+
+    def _execute(self, stmt: Stmt) -> None:
+        stmt.accept(self)
 
     def _evaluate(self, expr: Expr) -> object:
         return expr.accept(self)
