@@ -63,3 +63,13 @@ if __name__ == "__main__":
             "Unary    = operator: Token, right: Expr",
         ],
     )
+    
+    define_ast(
+        "src",
+        "stmt",
+        "Stmt",
+        [
+            "Expression = expression: Expr",
+            "Print      = expression: Expr",
+        ],
+    )
