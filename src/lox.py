@@ -26,7 +26,7 @@ class Lox:
         if script_filepath:
             self._run_file(script_filepath)
         else:
-            self._run_prompt() 
+            self._run_prompt()
 
     def _run(self, source: str):
         scanner = Scanner(source)
@@ -68,7 +68,7 @@ class Lox:
             cls._report(token.line, " at end", message)
         else:
             cls._report(token.line, " at '" + token.lexeme + "'", message)
-    
+
     @classmethod
     def runtime_error(cls, error: LoxRuntimeError) -> None:
         print(f"{str(error)}\n[line {error.token.line}]")

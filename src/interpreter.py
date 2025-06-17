@@ -79,13 +79,13 @@ class Interpreter(ExprVisitor[object], StmtVisitor[None]):
                 return not self._is_equal(left, right)  # type: ignore
             case _:
                 return None
-    
+
     @override
     def visit_printstmt_stmt(self, stmt: PrintStmt) -> None:
         value = self._evaluate(stmt.expression)
         print(self._stringify(value))
         return None
-    
+
     @override
     def visit_expressionstmt_stmt(self, stmt: ExpressionStmt) -> None:
         self._evaluate(stmt.expression)

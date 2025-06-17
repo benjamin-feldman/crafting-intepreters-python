@@ -39,12 +39,12 @@ class Parser:
         if self._match(TokenType.PRINT):
             return self._print_statement()
         return self._expression_statement()
-    
+
     def _print_statement(self) -> PrintStmt:
         value = self._expression()
         self._consume(TokenType.SEMICOLON, "Expect ';' after value.")
         return PrintStmt(value)
-    
+
     def _expression_statement(self) -> ExpressionStmt:
         value = self._expression()
         self._consume(TokenType.SEMICOLON, "Expect ';' after value.")
