@@ -72,6 +72,6 @@ if __name__ == "__main__":
         [
             "ExpressionStmt = expression: Expr",
             "PrintStmt      = expression: Expr",
-            "Var            = name: Token, initializer: Expr",
+            "Var            = name: Token, initializer: Expr | None",
         ],
     )

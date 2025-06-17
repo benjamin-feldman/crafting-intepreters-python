@@ -43,7 +43,7 @@ class PrintStmt(Stmt):
 
 
 class Var(Stmt):
-    def __init__(self, name: Token, initializer: Expr):
+    def __init__(self, name: Token, initializer: Expr | None):
         self.name = name
         self.initializer = initializer
 
