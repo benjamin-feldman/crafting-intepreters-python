@@ -61,6 +61,7 @@ if __name__ == "__main__":
             "Grouping = expression: Expr",
             "Literal  = value: object",
             "Unary    = operator: Token, right: Expr",
+            "Variable = name: Token",
         ],
     )
 
@@ -71,5 +72,6 @@ if __name__ == "__main__":
         [
             "ExpressionStmt = expression: Expr",
             "PrintStmt      = expression: Expr",
+            "Var            = name: Token, initializer: Expr",
         ],
     )

@@ -15,6 +15,8 @@ class StmtVisitor[R](ABC):
     def visit_expressionstmt_stmt(self, stmt: "ExpressionStmt") -> R: ...
     @abstractmethod
     def visit_printstmt_stmt(self, stmt: "PrintStmt") -> R: ...
+    @abstractmethod
+    def visit_var_stmt(self, stmt: "Var") -> R: ...
 
 
 class Stmt(ABC):
@@ -38,3 +40,13 @@ class PrintStmt(Stmt):
     @override
     def accept(self, visitor: StmtVisitor[R]) -> R:
         return visitor.visit_printstmt_stmt(self)
+
+
+class Var(Stmt):
+    def __init__(self, name: Token, initializer: Expr):
+        self.name = name
+        self.initializer = initializer
+
+    @override
+    def accept(self, visitor: StmtVisitor[R]) -> R:
+        return visitor.visit_var_stmt(self)

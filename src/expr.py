@@ -19,6 +19,8 @@ class ExprVisitor[R](ABC):
     def visit_literal_expr(self, expr: "Literal") -> R: ...
     @abstractmethod
     def visit_unary_expr(self, expr: "Unary") -> R: ...
+    @abstractmethod
+    def visit_variable_expr(self, expr: "Variable") -> R: ...
 
 
 class Expr(ABC):
@@ -63,3 +65,12 @@ class Unary(Expr):
     @override
     def accept(self, visitor: ExprVisitor[R]) -> R:
         return visitor.visit_unary_expr(self)
+
+
+class Variable(Expr):
+    def __init__(self, name: Token):
+        self.name = name
+
+    @override
+    def accept(self, visitor: ExprVisitor[R]) -> R:
+        return visitor.visit_variable_expr(self)

@@ -9,20 +9,28 @@ class ParseError(Exception): ...
 class Parser:
     """
     Implements the Lox grammar:
-    program        → statement* EOF ;
-    statement      → exprStmt
-                   | printStmt ;
-    exprStmt       → expression ";" ;
-    printStmt      → "print" expression ";" ;
-    expression     → equality ;
-    equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-    comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-    term           → factor ( ( "-" | "+" ) factor )* ;
-    factor         → unary ( ( "/" | "*" ) unary )* ;
-    unary          → ( "!" | "-" ) unary
-                | primary ;
-    primary        → NUMBER | STRING | "true" | "false" | "nil"
-                | "(" expression ")" ;
+    program        -> declaration* EOF ;
+    declaration    -> varDecl
+                    | statement ;
+    statement      -> exprStmt
+                    | printStmt ;
+    exprStmt       -> expression ";" ;
+    printStmt      -> "print" expression ";" ;
+    varDecl        -> "var" IDENTIFIER ( "=" expression )? ";" ;
+    expression     -> equality ;
+    equality       -> comparison ( ( "!=" | "==" ) comparison )* ;
+    comparison     -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+    term           -> factor ( ( "-" | "+" ) factor )* ;
+    factor         -> unary ( ( "/" | "*" ) unary )* ;
+    unary          -> ( "!" | "-" ) unary
+                    | primary ;
+    primary        -> NUMBER
+                    | STRING
+                    | "true"
+                    | "false"
+                    | "nil"
+                    | "(" expression ")"
+                    | IDENTIFIER ;
     """
 
     def __init__(self, tokens: list[Token]):
