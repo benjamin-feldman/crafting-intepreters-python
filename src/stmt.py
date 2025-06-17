@@ -12,9 +12,9 @@ R = TypeVar("R")
 
 class StmtVisitor[R](ABC):
     @abstractmethod
-    def visit_expression_stmt(self, stmt: "Expression") -> R: ...
+    def visit_expressionstmt_stmt(self, stmt: "ExpressionStmt") -> R: ...
     @abstractmethod
-    def visit_print_stmt(self, stmt: "Print") -> R: ...
+    def visit_printstmt_stmt(self, stmt: "PrintStmt") -> R: ...
 
 
 class Stmt(ABC):
@@ -22,19 +22,19 @@ class Stmt(ABC):
     def accept(self, visitor: StmtVisitor[R]) -> R: ...
 
 
-class Expression(Stmt):
+class ExpressionStmt(Stmt):
     def __init__(self, expression: Expr):
         self.expression = expression
 
     @override
     def accept(self, visitor: StmtVisitor[R]) -> R:
-        return visitor.visit_expression_stmt(self)
+        return visitor.visit_expressionstmt_stmt(self)
 
 
-class Print(Stmt):
+class PrintStmt(Stmt):
     def __init__(self, expression: Expr):
         self.expression = expression
 
     @override
     def accept(self, visitor: StmtVisitor[R]) -> R:
-        return visitor.visit_print_stmt(self)
+        return visitor.visit_printstmt_stmt(self)
