@@ -76,7 +76,7 @@ class Lox:
 
     @classmethod
     def _report(cls, line: int, where: str, message: str):
-        print(f"[line {line}] Error {where}: {message}")
+        print(f"[line {line}] Error{where}: {message}")
         cls.had_error = True
 
 
