@@ -91,12 +91,10 @@ class Parser:
             if isinstance(expr, Variable):
                 name = expr.name
                 return Assign(name, value)
-        
+
             self._error(equals, "Invalid assignment target.")
-        
+
         return expr
-        
-        
 
     def _equality(self) -> Expr:
         expr = self._comparison()

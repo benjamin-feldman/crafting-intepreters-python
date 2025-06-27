@@ -1,6 +1,15 @@
 from typing import override
 
-from src.expr import Assign, Binary, Grouping, Literal, Expr, Unary, ExprVisitor, Variable
+from src.expr import (
+    Assign,
+    Binary,
+    Grouping,
+    Literal,
+    Expr,
+    Unary,
+    ExprVisitor,
+    Variable,
+)
 from src.token import Token, TokenType
 from src.stmt import StmtVisitor, Stmt, PrintStmt, ExpressionStmt, Var
 from src.environment import Environment
@@ -110,7 +119,7 @@ class Interpreter(ExprVisitor[object], StmtVisitor[None]):
     def _execute(self, stmt: Stmt | None) -> None:
         if stmt is not None:
             stmt.accept(self)
-            
+
     @override
     def visit_assign_expr(self, expr: Assign) -> object:
         value = self._evaluate(expr.value)

@@ -1,4 +1,3 @@
-
 import unittest
 
 from src.parser import Parser
