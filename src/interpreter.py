@@ -1,8 +1,9 @@
 from typing import override
 
-from src.expr import Binary, Grouping, Literal, Expr, Unary, ExprVisitor
+from src.expr import Assign, Binary, Grouping, Literal, Expr, Unary, ExprVisitor, Variable
 from src.token import Token, TokenType
-from src.stmt import StmtVisitor, Stmt, PrintStmt, ExpressionStmt
+from src.stmt import StmtVisitor, Stmt, PrintStmt, ExpressionStmt, Var
+from src.environment import Environment
 
 
 class LoxRuntimeError(Exception):
@@ -12,7 +13,10 @@ class LoxRuntimeError(Exception):
 
 
 class Interpreter(ExprVisitor[object], StmtVisitor[None]):
-    def interpret(self, statements: list[Stmt]) -> None:
+    def __init__(self):
+        self._environment = Environment()
+
+    def interpret(self, statements: list[Stmt | None]) -> None:
         try:
             for statement in statements:
                 self._execute(statement)
@@ -91,8 +95,27 @@ class Interpreter(ExprVisitor[object], StmtVisitor[None]):
         self._evaluate(stmt.expression)
         return None
 
-    def _execute(self, stmt: Stmt) -> None:
-        stmt.accept(self)
+    @override
+    def visit_var_stmt(self, stmt: Var) -> None:
+        value: object = None
+        if stmt.initializer is not None:
+            value = self._evaluate(stmt.initializer)
+        self._environment.define(stmt.name.lexeme, value)
+        return None
+
+    @override
+    def visit_variable_expr(self, expr: Variable) -> object:
+        return self._environment.get(expr.name)
+
+    def _execute(self, stmt: Stmt | None) -> None:
+        if stmt is not None:
+            stmt.accept(self)
+            
+    @override
+    def visit_assign_expr(self, expr: Assign) -> object:
+        value = self._evaluate(expr.value)
+        self._environment.assign(expr.name, value)
+        return value
 
     def _evaluate(self, expr: Expr) -> object:
         return expr.accept(self)

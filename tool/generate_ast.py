@@ -57,6 +57,7 @@ if __name__ == "__main__":
         "expr",
         "Expr",
         [
+            "Assign   = name: Token, value: Expr",
             "Binary   = left: Expr, operator: Token, right: Expr",
             "Grouping = expression: Expr",
             "Literal  = value: object",

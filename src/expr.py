@@ -12,6 +12,8 @@ R = TypeVar("R")
 
 class ExprVisitor[R](ABC):
     @abstractmethod
+    def visit_assign_expr(self, expr: "Assign") -> R: ...
+    @abstractmethod
     def visit_binary_expr(self, expr: "Binary") -> R: ...
     @abstractmethod
     def visit_grouping_expr(self, expr: "Grouping") -> R: ...
@@ -26,6 +28,16 @@ class ExprVisitor[R](ABC):
 class Expr(ABC):
     @abstractmethod
     def accept(self, visitor: ExprVisitor[R]) -> R: ...
+
+
+class Assign(Expr):
+    def __init__(self, name: Token, value: Expr):
+        self.name = name
+        self.value = value
+
+    @override
+    def accept(self, visitor: ExprVisitor[R]) -> R:
+        return visitor.visit_assign_expr(self)
 
 
 class Binary(Expr):
